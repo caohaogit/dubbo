@@ -18,12 +18,29 @@
 	<modelVersion>4.0.0</modelVersion>
     <groupId>com.alibaba</groupId>
 	<artifactId>dubbo-parent</artifactId>
-	<version>2.5.4-SNAPSHOT</version>
+	<version>2.5.4</version>
 	<packaging>pom</packaging>
 	<name>${project.artifactId}</name>
+	
 	<description>The parent project of dubbo</description>
-	<url>http://code.alibabatech.com/wiki/display/dubbo</url>
-	<inceptionYear>2011</inceptionYear>
+	<!-- <url>http://code.alibabatech.com/wiki/display/dubbo</url> -->
+	<!-- <inceptionYear>2011</inceptionYear> -->
+	
+	<distributionManagement>
+		<!-- <repository>
+		  <id>onelife-releases</id>
+		  <url>http://10.6.0.118:8080/nexus/content/repositories/onelife-releases</url>
+		</repository>
+		<snapshotRepository>
+		  <id>onelife-snapshorts</id>
+		  <url>http://10.6.0.118:8080/nexus/content/repositories/onelife-snapshorts</url>
+		</snapshotRepository> -->
+		<repository>
+		  <id>onelife-releases</id>
+		  <url>http://10.6.0.118:8080/nexus/content/repositories/onelife-3rd-party</url>
+		</repository>
+	</distributionManagement>
+	
 	<licenses>
 		<license>
 			<name>Apache 2</name>
@@ -32,10 +49,10 @@
 			<comments>A business-friendly OSS license</comments>
 		</license>
 	</licenses>
-	<organization>
+	<!-- <organization>
 		<name>Alibaba</name>
 		<url>http://www.alibaba.com</url>
-	</organization>
+	</organization> -->
 	<modules>
 		<module>hessian-lite</module>
 		<module>dubbo-common</module>
@@ -81,6 +98,8 @@
 	</profiles>
 	<properties>
 		<!-- Common libs -->
+		<java.version>1.8</java.version>
+		
 		<spring_version>3.2.16.RELEASE</spring_version>
 		<javassist_version>3.20.0-GA</javassist_version>
 		<netty_version>3.2.5.Final</netty_version>
@@ -386,7 +405,7 @@
 					<forkMode>once</forkMode>
 					<argLine>${argline}</argLine>
 					<systemProperties>
-						<!-- common shared -->
+						common shared
 						<property>
 							<name>transporter</name>
 							<value>${transporter}</value>
@@ -395,7 +414,7 @@
 							<name>serialization</name>
 							<value>${serialization}</value>
 						</property>
-						<!-- server side -->
+						server side
 						<property>
 							<name>port</name>
 							<value>${port}</value>
@@ -412,7 +431,7 @@
 							<name>iothreads</name>
 							<value>${iothreads}</value>
 						</property>
-						<!-- client side -->
+						client side
 						<property>
 							<name>server</name>
 							<value>${server}</value>
@@ -455,18 +474,158 @@
 					<skip>${skip_maven_deploy}</skip>
 				</configuration>
 			</plugin>
+			
+			
+			<!-- eclipse插件 -->
+            <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.8</version>
+			</plugin>
+            
+            <!-- compiler插件, 设定JDK版本 -->
+            <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.5.1</version>
+				<configuration>
+					<!-- <failOnError>true</failOnError>
+					<verbose>true</verbose>
+					<fork>true</fork>
+					<compilerArgument>-nowarn</compilerArgument> -->
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+            
+
+            <!-- test插件 -->
+           <!--  <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                    <failIfNoTests>false</failIfNoTests>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                </configuration>
+            </plugin> -->
+            
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>2.1</version>
+            </plugin>
+            
+           <!--  <plugin>
+			     <groupId>org.apache.maven.plugins</groupId>
+			     <artifactId>maven-surefire-plugin</artifactId>
+			     <extensions>true</extensions>
+			     <version>2.19.1</version>
+			     <configuration>
+			           <testFailureIgnore>true</testFailureIgnore>
+			           <argLine>${maven.test.jvmargs}</argLine>
+			           <excludes>
+			              <exclude>**/*Test.java</exclude>  
+			           </excludes>
+			      </configuration>
+			</plugin> -->
+
+            <!-- resource插件, 设定编码 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+
+            <!-- clean插件-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+            </plugin>
+
+            <!-- install插件-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+            </plugin>
+
+            <!-- deploy插件-->
+           <!--  <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.8.2</version>
+				<configuration>
+					<uniqueVersion>false</uniqueVersion>
+				</configuration>
+			</plugin> -->
+
+
+            <!-- war插件-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <warName>${project.artifactId}</warName>
+                </configuration>
+            </plugin>
+
+            <!-- jar插件 -->
+            <!-- <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin> -->
+            <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.0.1</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+            <!-- dependency插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+            </plugin>
+
+            <!--release 插件-->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.1</version>
+                </plugin>
+          
 		</plugins>
 	</build>
 
-	<issueManagement>
+	<!-- <issueManagement>
 		<system>github</system>
 		<url>https://github.com/alibaba/dubbo/issues</url>
-	</issueManagement>
-	<scm>
+	</issueManagement> -->
+	<!-- <scm>
 		<url>https://github.com/alibaba/dubbo</url>
 		<connection>https://github.com/alibaba/dubbo.git</connection>
-	</scm>
-	<mailingLists>
+	</scm> -->
+	<!-- <mailingLists>
 		<mailingList>
 			<name>Dubbo User Mailling List</name>
 			<subscribe>dubbo-subscribe AT googlegroups DOT com</subscribe>
@@ -474,79 +633,16 @@
 			<post>dubbo AT googlegroups DOT com</post>
 			<archive>http://groups.google.com/group/dubbo</archive>
 		</mailingList>
-	</mailingLists>
+	</mailingLists> -->
 	<developers>
 		<developer>
-			<name>QianXiao(Shawn)</name>
-			<id>shawn.qianx</id>
-			<email>shawn.qianx (AT) alibaba-inc.com</email>
+			<name>caohao</name>
+			<id>caohaogit</id>
+			<email>caohao@chinalife.com.hk</email>
 			<roles>
 				<role>Developer</role>
 			</roles>
 			<timezone>+8</timezone>
 		</developer>
-		<developer>
-			<name>LiangFei(William)</name>
-			<id>william.liangf</id>
-			<email>william.liangf (AT) alibaba-inc.com</email>
-			<roles>
-				<role>Developer</role>
-			</roles>
-			<timezone>+8</timezone>
-		</developer>
-		<developer>
-			<name>LiDing(Jerry)</name>
-			<id>ding.lid</id>
-			<email>ding.lid (AT) alibaba-inc.com</email>
-			<roles>
-				<role>Developer</role>
-			</roles>
-			<timezone>+8</timezone>
-		</developer>
-		<developer>
-			<name>LiuChao(Charles)</name>
-			<id>chao.liuc</id>
-			<email>chao.liuc (AT) alibaba-inc.com</email>
-			<roles>
-				<role>Developer</role>
-			</roles>
-			<timezone>+8</timezone>
-		</developer>
-		<developer>
-			<name>LiuHaoMin(Ludvik)</name>
-			<id>haoming.liuhm</id>
-			<email>haoming.liuhm (AT) alibaba-inc.com</email>
-			<roles>
-				<role>Developer</role>
-			</roles>
-			<timezone>+8</timezone>
-		</developer>
-		<developer>
-			<name>ChenLei(Tony)</name>
-			<id>tony.chenl</id>
-			<email>tony.chenl (AT) alibaba-inc.com</email>
-			<roles>
-				<role>Developer</role>
-			</roles>
-			<timezone>+8</timezone>
-		</developer>
-		<developer>
-			<name>LvGang(Kimi)</name>
-			<id>gang.lvg</id>
-			<email>gang.lvg (AT) alibaba-inc.com</email>
-			<roles>
-				<role>Developer</role>
-			</roles>
-			<timezone>+8</timezone>
-		</developer>
-        <developer>
-            <name>WuXiaoFei(Teaey)</name>
-            <id>xiaofei.wxf</id>
-            <email>xiaofei.wxf (AT) alibaba-inc.com</email>
-            <roles>
-                <role>Developer</role>
-            </roles>
-            <timezone>+8</timezone>
-        </developer>
 	</developers>
 </project>
